@@ -6,19 +6,63 @@
     <title>LurkForWork</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- You can add your styles and scripts here -->
-    <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="styles/global.css" />
 </head>
 <body>
     <!-- This is an example app structure, you can modify this as much as you choose --> 
     <header>
-        <h1>lurkforwork.com</h1>
-        <nav>
-            <li class="nav-item">Item</li>
-            <li class="nav-item">Item</li>
-        </nav>
+        <div id="app-name">
+            <h1 style="margin-left: 10px;">lurkforwork.com</h1>
+        </div>
+        <div id="app-bar">
+            <div id="nav-logged-out">
+                <button class="nav-item" id="nav-register">Register</button>
+                <button class="nav-item" id="nav-login">Login</button>
+            </div>
+            <div id="nav-logged-in" class="hide">
+                Logged in 
+                <button id="home-button" class="nav-item hide">Home</button>
+                <button id="profile-button" class="nav-item">View Profile</button>
+                <button id="search-watch-button" class="nav-item">Search Watch</button>
+                <button id="logout-button" class="nav-item">Logout</button>
+            </div>
+        </div>
     </header>
     <main role="main">
         <!-- app goes here --> 
+        <div id="section-logged-in" class="hide">
+            
+            <div id="home-page">
+                <h2 style="margin-left: 10px;">Home Page</h2>
+                <h3>Add new job</h3>
+                <button id="create-fake-job">create fake job</button>
+                <button id="create-job-button">Create New Job</button>
+                <div id="feed-items"></div>
+            </div>
+            <div id="profile-page"></div>
+        </div>
+        <div id="section-logged-out"> 
+            <div id="page-register">
+                <div id="account-block">
+                    <h2>Create a new Account</h2>
+                    <input id="register-email" type="text" placeholder ="Email Address" value="z5267934@ad.unsw.edu.au"/><br />
+                    <input id="register-name" type="text" placeholder ="Full Name" value="Walten"/><br />
+                    <input id="register-password" type="password" placeholder ="Password" value="pass"/><br />
+                    <input id="register-cpassword" type="password" placeholder ="Confirm Password" value="pass"/><br />
+                    <button id="register-button" class="sign-in-buttons">Register</button><br />
+                    <label for="nav-login"><u>Already have an account?</u></label>
+                </div>
+            </div>
+            <div id="page-login" class='hide'>
+                <div id="account-block">
+                    <h2>Log In</h2>
+                    <input id="login-email" type="text" placeholder ="Email Address" value="z5267934@ad.unsw.edu.au"/><br />
+                    <input id="login-password" type="password" placeholder ="Password" value="pass"/><br />
+                    <button id="login-button" class="sign-in-buttons">Login</button><br />
+                    <label for="nav-register"><u>Don't have an account?</u></label>
+                </div>
+            </div>
+        </div>
     </main>
     <footer>
         <p>&copy; lurkforwork.com 2022</p>

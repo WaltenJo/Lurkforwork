@@ -5,3 +5,164 @@ html, body {
     height: 100%;
     font-family: Arial;
 }
+
+#app-name {
+    background-color: #0072b1 ;
+    color: white;
+    margin-top: -21px;
+}
+
+#app-bar {
+    background-color: aliceblue;
+    padding: 10px;
+    margin-top: -22px;
+}
+
+.hide {
+    display: none;
+}
+
+#account-block {
+    outline: auto;
+    margin: auto;
+    margin-top: 50px;
+    width: 400px;
+    height: 400px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+input {
+    height: 20px;
+    padding: 5px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.nav-item {
+    padding: 5px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: white;
+    width: 100px;
+    color:#0072b1;
+    background-color: white;
+    outline: 2px solid #0072b1;
+    margin-left: 10px;
+}
+.nav-item:hover {
+    background-color: #0072b1;
+    color: white;
+    cursor: pointer;
+}
+
+label:hover {
+    cursor: pointer;
+}
+
+.sign-in-buttons {
+    background-color: #0072b1;
+    color: white;
+    padding: 5px;
+    border:3px solid #0072b1;
+    cursor: pointer;
+}
+
+.like-button {
+    background-color: #0072b1;
+    border: 5px;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    transform: translate(80px, -35px);
+    height:30px;
+    align-items: center;
+}
+
+.like-button:hover {
+    background-color: lightcoral;
+}
+
+.comment-button {
+    background-color: #0072b1;
+    border: 5px;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    transform: translate(80px, -38px);
+    height:30px;
+    align-items: center;
+}
+
+.feedBlock {
+    outline: auto;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    height: 140px;
+}
+
+.feedBlockLeft {
+    width: 150px;
+}
+
+.feed-image {
+    width: 140px;
+    height: auto;
+}
+
+#profile {
+    z-index: 1;
+    position: absolute;
+}
+
+.popup {
+    border-radius: 10px;
+    outline: 2px solid #0072b1;
+    width: 400px;
+    background: aliceblue;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%,-50%);
+    padding: 10px;
+    color: #0072b1;
+}
+
+#popup-close-button {
+    cursor: pointer;
+    background-color: aliceblue;
+    color: #0072b1;
+    font-size: 30px;
+    border: 0px;
+    padding: 10px;
+    position: absolute;
+    top: 1px;
+    right: 5px;
+}
+
+.user {
+    outline: auto;
+    outline-color: white;
+    background-color: #0072b1;
+    color: white;
+    text-align: centers;
+    font-size: 20px;
+    padding: 20px 0;
+    font-weight: bold;
+}
+
+.watch-button {
+    cursor: pointer;
+    background-color: #0072b1;
+    color: white;
+    height: 34px;
+    width: 50px;
+    border: 0px;
+}

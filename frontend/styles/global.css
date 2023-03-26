@@ -74,11 +74,12 @@ label:hover {
 
 .like-button {
     background-color: #0072b1;
+    border-radius: 5px;
     border: 5px;
     font-size: 20px;
     color: white;
     cursor: pointer;
-    transform: translate(80px, -35px);
+    transform: translate(80px, -34px);
     height:30px;
     align-items: center;
 }
@@ -93,9 +94,10 @@ label:hover {
     font-size: 20px;
     color: white;
     cursor: pointer;
-    transform: translate(80px, -38px);
+    transform: translate(80px, -36px);
     height:30px;
     align-items: center;
+    border-radius: 5px;
 }
 
 .feedBlock {
@@ -113,7 +115,7 @@ label:hover {
 
 .feed-image {
     width: 140px;
-    height: auto;
+    height: 140px;
 }
 
 #profile {
@@ -133,6 +135,9 @@ label:hover {
     transform: translate(-50%,-50%);
     padding: 10px;
     color: #0072b1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #popup-close-button {
@@ -156,13 +161,39 @@ label:hover {
     font-size: 20px;
     padding: 20px 0;
     font-weight: bold;
+    cursor: pointer;
 }
 
-.watch-button {
-    cursor: pointer;
-    background-color: #0072b1;
-    color: white;
-    height: 34px;
-    width: 50px;
-    border: 0px;
+.user:hover {
+    text-decoration: underline;
 }
+
+.standard-button {
+    color: white;
+    border: none;
+    background-color: #0072b1;
+    height: 30px;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.standard-button:hover {
+    color: #0072b1;
+    background-color: white;
+}
+
+.top-elements {
+    margin-left: 10px;
+}
+
+@media only screen and (max-width:500px) {
+.nav-item {
+    width: 75px;
+    min-height: 60px;
+}
+.popup {
+    width: 300px;
+}
+}
+

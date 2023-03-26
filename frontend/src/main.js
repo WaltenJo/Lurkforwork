@@ -55,6 +55,7 @@ const elementFactory = (type, text, appendTo) => {
     } else {
         appendTo.appendChild(element);
     }
+    return element;
 }
 
 //Makes an apiCall to get the username, given a userId
@@ -212,7 +213,7 @@ document.getElementById('search-watch-button').addEventListener('click', () => {
     popup.appendChild(inputEmail);
 
     const watchButton = document.createElement('button');
-    watchButton.className = 'watch-button'
+    watchButton.className = 'standard-button'
     watchButton.innerHTML = 'Watch';
     popup.appendChild(watchButton);
 
@@ -232,7 +233,6 @@ document.getElementById('search-watch-button').addEventListener('click', () => {
 document.getElementById('create-job-button').addEventListener('click', () => {
     const popup = document.createElement('div');
     popup.className = 'popup';
-    popup.style.height = "130px"
 
     const popupClose = document.createElement('button');
     popupClose.id = 'popup-close-button';
@@ -241,6 +241,8 @@ document.getElementById('create-job-button').addEventListener('click', () => {
         popup.remove();
     });
     popup.appendChild(popupClose);
+
+    elementFactory('h2', 'Create a new Job', popup);
 
     //INPUTS
     const inputTitle = document.createElement('input');
@@ -261,16 +263,24 @@ document.getElementById('create-job-button').addEventListener('click', () => {
     popup.appendChild(inputImage);
 
     const createJobEnterButton = document.createElement('button');
+    createJobEnterButton.classList.add('standard-button');  
     createJobEnterButton.innerHTML = 'Create Job';
     popup.append(createJobEnterButton);
+
     createJobEnterButton.addEventListener('click', () =>{
-        const payload = {
-            "title": inputTitle.value,
-            "image": null,
-            "start": inputStart.value,
-            "description": inputDescription.value
-        }
-        apiCall('job', 'POST', payload);
+        const file = inputImage.files[0];
+        fileToDataUrl(file).then((base64str) => {
+            const payload = {
+                "title": inputTitle.value,
+                "image": base64str,
+                "start": inputStart.value,
+                "description": inputDescription.value
+            }
+            apiCall('job', 'POST', payload, (data) => {
+                populateFeed(data, 'feed-items');
+            });
+        })
+        popup.remove();
     });
 
     document.getElementById('section-logged-in').appendChild(popup);
@@ -288,10 +298,16 @@ const populateProfile = (userId) => {
     apiCall('user?userId='+userId, 'GET', {}, (data) => {
         document.getElementById('profile-page').textContent = '';
         
-        elementFactory('h2', data.name, 'profile-page');
-        
+        const profileName = elementFactory('h2', data.name, 'profile-page');
+        profileName.classList.add('top-elements');
+
+        const profileEmail = elementFactory('div', data.email, 'profile-page');
+        profileEmail.classList.add('top-elements');
+
         if(userId != localStorage.getItem('userId')) {
             const watchButton = document.createElement('button');
+            watchButton.classList.add('standard-button');
+            watchButton.classList.add('top-elements');
             watchButton.innerText = 'Watch';
             watchButton.addEventListener('click', () => {
                 const userEmail = getEmail(userId);
@@ -301,19 +317,18 @@ const populateProfile = (userId) => {
                         turnon: true
                     }
 
-                    apiCall('user/watch', 'PUT', payload, (data) => {
-                        //console.log('Success')
-                    })
+                    apiCall('user/watch', 'PUT', payload);
                 });                
             })
             document.getElementById('profile-page').appendChild(watchButton);  
         } else {
             const editProfileButton = document.createElement('button');
+            editProfileButton.classList.add('standard-button');
+            editProfileButton.classList.add('top-elements');
             editProfileButton.innerText = 'Edit Profile';
             editProfileButton.addEventListener('click', () => {  
                 const popup = document.createElement('div');
                 popup.className = 'popup';
-                //popup.style.height = "130px"
             
                 const popupClose = document.createElement('button');
                 popupClose.id = 'popup-close-button';
@@ -343,31 +358,35 @@ const populateProfile = (userId) => {
                 popup.appendChild(editProfileEnterButton);
 
                 editProfileEnterButton.addEventListener('click', () => {
-                    const payload = {
-                        email: inputEmail.value,
-                        password: inputPassword.value,
-                        name: inputName.value,
-                        img: undefined
-                    }
+                    const file = inputImage.files[0];
+                    fileToDataUrl(file).then((base64str) => {
+                        const payload = {
+                            email: inputEmail.value,
+                            password: inputPassword.value,
+                            name: inputName.value,
+                            img: base64str
+                        }
 
-                    apiCall('user', 'PUT', payload, (data) => {
-                        console.log('Success')
-                    })
+                        apiCall('user', 'PUT', payload, (data) => {
+                            populateFeed(data, 'feed-items');
+                        });
+                    });
+                    popup.remove();
                 })
 
                 document.getElementById('section-logged-in').appendChild(popup);
             })
             document.getElementById('profile-page').appendChild(editProfileButton);  
-        }
-
-        elementFactory('div', data.email, 'profile-page');        
+        }        
         
         createFeedBlock(data.jobs, 'profile-page')
 
-        elementFactory('h2', 'Followers:' + data.watcheeUserIds.length, 'profile-page');
+        const profileFollowers = elementFactory('h2', 'Followers:' + data.watcheeUserIds.length, 'profile-page');
+        profileFollowers.classList.add('top-elements');
         
         data.watcheeUserIds.forEach(element => {
             const watchee = document.createElement('div');
+            watchee.classList.add('top-elements')
             const watcheeName = getName(element);
             watcheeName.then(name => watchee.innerText = name);
             //console.log(getName(element))
@@ -412,7 +431,7 @@ const createFeedBlock = (data, destination) => {
             }
 
             apiCall('job/like', 'PUT', payload, (data) => {
-                //console.log('success')
+                populateFeed(data, 'feed-items');
             });
         });
         feedBlockLeft.appendChild(likeButton);
@@ -441,14 +460,18 @@ const createFeedBlock = (data, destination) => {
             popup.appendChild(inputComment);
 
             const commentEnterButton = document.createElement('button');
-            commentEnterButton.innerHTML = "Post Comment"
+            commentEnterButton.classList.add('standard-button');
+            commentEnterButton.innerHTML = "Post Comment";
             commentEnterButton.addEventListener('click', () => {
                 const payload = {
                     "id": feedItem.id,
                     "comment": inputComment.value
                 }
 
-                apiCall('job/comment', 'POST', payload);
+                apiCall('job/comment', 'POST', payload, (data) => {
+                    populateFeed(data, 'feed-items');
+                });
+                popup.remove();
             });
             popup.appendChild(commentEnterButton);
 
@@ -517,14 +540,15 @@ const createFeedBlock = (data, destination) => {
         feedComments.innerText = "Comments: " + feedItem.comments.length;
         feedBlockRight.appendChild(feedComments);
 
+        //Buttons
         if(feedItem.creatorId == localStorage.getItem('userId')) {
             //EDIT POST
             const editPostButton = document.createElement('button');
+            editPostButton.classList.add('standard-button');
             editPostButton.innerHTML = "Edit Post";
             editPostButton.addEventListener('click', () => {
                 const popup = document.createElement('div');
                 popup.className = 'popup';
-                popup.style.height = "130px"
 
                 const popupClose = document.createElement('button');
                 popupClose.id = 'popup-close-button';
@@ -534,6 +558,7 @@ const createFeedBlock = (data, destination) => {
                 });
                 popup.appendChild(popupClose);
 
+                elementFactory('h2', 'Edit Post', popup);
                 //INPUTS
                 const inputTitle = document.createElement('input');
                 inputTitle.placeholder = 'Title';
@@ -553,17 +578,24 @@ const createFeedBlock = (data, destination) => {
                 popup.appendChild(inputImage);
 
                 const createJobEnterButton = document.createElement('button');
+                createJobEnterButton.classList.add('standard-button');
                 createJobEnterButton.innerHTML = 'Save Changes';
                 popup.append(createJobEnterButton);
                 createJobEnterButton.addEventListener('click', () =>{
-                    const payload = {
-                        "id": feedItem.id,
-                        "title": inputTitle.value,
-                        "image": null,
-                        "start": inputStart.value,
-                        "description": inputDescription.value
-                    }
-                    apiCall('job', 'PUT', payload);
+                    const file = inputImage.files[0];
+                    fileToDataUrl(file).then((base64str) => {
+                        const payload = {
+                            "id": feedItem.id,
+                            "title": inputTitle.value,
+                            "image": base64str,
+                            "start": inputStart.value,
+                            "description": inputDescription.value
+                        }
+                        apiCall('job', 'PUT', payload, (data) => {
+                            populateFeed(data, 'feed-items');
+                            popup.remove();
+                        });
+                    });
                 });
 
                 document.getElementById('section-logged-in').appendChild(popup);
@@ -572,12 +604,15 @@ const createFeedBlock = (data, destination) => {
 
             //DELETE POST
             const deletePostButton = document.createElement('button');
+            deletePostButton.classList.add('standard-button');
             deletePostButton.innerHTML = "Delete Post";
             deletePostButton.addEventListener('click', () => {
                 const payload = {
                     "id": feedItem.id
                 }
-                apiCall('job', 'DELETE', payload);
+                apiCall('job', 'DELETE', payload, (data) => {
+                    populateFeed(data, 'feed-items');
+                });
             });
             feedBlockRight.appendChild(deletePostButton);
         }
@@ -611,6 +646,15 @@ const createPopup = (list, type) => {
     list.forEach(element => {
         const user = document.createElement('div');
         user.className = 'user';
+        user.addEventListener('click', () => {
+            show('home-button');
+            hide('profile-button');
+    
+            show('profile-page');
+            hide('home-page');
+
+            populateProfile(element.userId);
+        });
         //console.log(element);
         user.innerHTML = element.userName;
 

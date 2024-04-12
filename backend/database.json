@@ -44,7 +44,9 @@
       "start": "2023-03-16",
       "description": "Please",
       "createdAt": "2023-03-26T19:23:58.318Z",
-      "likes": {},
+      "likes": {
+        "36093": true
+      },
       "comments": []
     },
     "369993": {
